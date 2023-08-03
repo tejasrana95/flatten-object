@@ -7,7 +7,11 @@ const input = {
   d: {
     e: {
       f: {
-        g: 2,
+        g: {
+          f: {
+            g: 2,
+          },
+        },
       },
     },
   },
@@ -15,33 +19,21 @@ const input = {
   x: 4,
 };
 
-const tempOutput = {};
-
-function a(obj, key) {
-  if (typeof obj === 'Object') {
-    const temp = Object.keys(obj);
-    console.log('temp', temp);
-    temp.forEach((data) => {
-      console.log('datab', data);
-    });
-  }
-}
-
-function b() {
-  const temp = Object.keys(input);
-  console.log('temp', temp);
-
-  temp.forEach((data) => {
-    console.log('data', data);
-    if (typeof input[data] !== 'Object') {
-      console.log(input[data]);
-      a(input[data]);
+function flattenObject(obj, prefix = '') {
+  const tempOutput = {};
+  Object.keys(obj).forEach((data, index) => {
+    if (typeof obj[data] === 'object') {
+      const newKeysObj = flattenObject(obj[data], `${prefix}${data}.`);
+      Object.assign(tempOutput, newKeysObj);
+    } else {
+      tempOutput[`${prefix}${data}.`] = obj[data];
     }
   });
+  return tempOutput;
 }
 
-b();
-
+const a = flattenObject(input);
+console.log(a);
 /**
      * 
      * {
